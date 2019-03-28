@@ -19,10 +19,7 @@ import HorizontalStepper from "vue-stepper";
 import Overview from "./Overview.vue";
 import Options from "./Options.vue";
 import Predictions from "./Predictions.vue";
-import Details from "./Details.vue";
 import Confirm from "./Confirm.vue";
-import { EventBus } from "../Eventbus.js";
-import { store } from "../dataStore.js";
 import router from "vue-router";
 
 export default {
@@ -67,11 +64,6 @@ export default {
         }
       ]
     };
-  },
-  created() {
-    EventBus.$on("item-selected", event => {
-      store.order_number = event.order_number;
-    });
   },
   components: {
     HorizontalStepper

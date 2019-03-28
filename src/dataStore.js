@@ -1,3 +1,3 @@
 export const store = {
-  order_number: null
+  active_order: null
 };

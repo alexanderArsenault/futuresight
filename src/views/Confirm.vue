@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-import modumVuetable from "../components/modumVuetable";
+import modumVuetable from "../components/vuetable/modumVuetable";
 import Orders from "../data/orders.json";
 import { EventBus } from "../Eventbus.js";
 import { store } from "../dataStore.js";

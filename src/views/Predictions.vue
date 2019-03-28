@@ -17,16 +17,13 @@
     </div>
   </div>
 </template>
-
 <script>
 import Chart from "chart.js";
-import ComplianceChartData from "../charts/compliance-chart.js";
-import ComplianceChartCooledData from "../charts/compliance-chart-cooled.js";
+import ComplianceChartData from "../charts/thermal-compliance.js";
+import ComplianceChartCooledData from "../charts/standard-compliance.js";
 import RiskChartData from "../charts/risk-chart.js";
 import moment from "moment";
-import CompliancyData from "../data/compliant_items_per_order.json";
 import RiskData from "../data/total_exposure_per_order.json";
-import { store } from "../dataStore.js";
 
 export default {
   data() {
@@ -56,25 +53,11 @@ export default {
     },
     createChart(chartId, chartData) {
       const ctx = document.getElementById(chartId);
-      const myChart = new Chart(ctx, {
+      new Chart(ctx, {
         type: chartData.type,
         data: chartData.data,
         options: chartData.options
       });
-    },
-    resetChartData() {
-      let chartdata = ComplianceChartData.data;
-      chartdata.datasets[0].data = [];
-      chartdata.datasets[1].data = [];
-      chartdata.labels = [];
-      let riskchartdata = RiskChartData.data;
-      riskchartdata.datasets[0].data = [];
-      riskchartdata.datasets[1].data = [];
-      riskchartdata.labels = [];
-      let chartdatacooled = ComplianceChartCooledData.data;
-      chartdatacooled.labels = [];
-      chartdatacooled.datasets[0].data = [];
-      chartdatacooled.datasets[1].data = [];
     },
 
     updateComplianceCharts() {
@@ -104,51 +87,6 @@ export default {
       this.CooledPackRiskArray.forEach(entry => {
         chartdata.datasets[1].data.push(entry.risk);
       });
-    }
-  },
-  computed: {
-    CompliancyArray() {
-      let CompliancyArray = CompliancyData.filter(
-        x => x.order_number === store.order_number
-      );
-      store.CompliancyArray = CompliancyArray;
-      return CompliancyArray;
-    },
-    StandardPackDateArray() {
-      let StandardPackDateArray = this.CompliancyArray.filter(
-        x => x.kind === "standard"
-      );
-      store.StandardPackDateArray = StandardPackDateArray;
-      return StandardPackDateArray;
-    },
-    CooledPackDateArray() {
-      let CooledPackDateArray = this.CompliancyArray.filter(
-        x => x.kind === "thermo-o-cool"
-      );
-      store.CooledPackDateArray = CooledPackDateArray;
-      return CooledPackDateArray;
-    },
-
-    RiskArray() {
-      let RiskArray = RiskData.filter(
-        x => x.order_number === store.order_number
-      );
-      store.RiskArray = RiskArray;
-      return RiskArray;
-    },
-    StandardPackRiskArray() {
-      let StandardPackRiskArray = this.RiskArray.filter(
-        x => x.kind === "standard"
-      );
-      store.StandardPackRiskArray = StandardPackRiskArray;
-      return StandardPackRiskArray;
-    },
-    CooledPackRiskArray() {
-      let CooledPackRiskArray = this.RiskArray.filter(
-        x => x.kind === "thermo-o-cool"
-      );
-      store.CooledPackRiskArray = CooledPackRiskArray;
-      return CooledPackRiskArray;
     }
   }
 };

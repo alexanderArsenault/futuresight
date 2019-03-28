@@ -1,11 +1,6 @@
 <template>
   <div :class="[classList, 'shipping-child']">
-    <div
-      class="shipping-image"
-      :style="{
-        backgroundImage: 'url(' + require('../assets/images/' + data.img) + ')'
-      }"
-    ></div>
+    <div class="shipping-image"></div>
     <h4 class="shipping-header">{{ data.title }}</h4>
     <div class="shipping-body">
       <p v-if="data.cost">Cost: {{ data.cost }}</p>

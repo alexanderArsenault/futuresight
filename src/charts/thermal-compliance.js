@@ -1,8 +1,6 @@
-import { store } from "../dataStore.js";
 import { colors } from "../styles/graph-variables";
 
-console.log(store);
-const complianceChartCooledData = {
+const thermalComplianceChart = {
   type: "bar",
   title: "Cooled",
   data: {
@@ -34,18 +32,18 @@ const complianceChartCooledData = {
         label: "Compliant",
         data: [],
         backgroundColor: [
-          colors.cooled,
-          colors.cooled,
-          colors.cooled,
-          colors.cooled,
-          colors.cooled
+          colors.thermal,
+          colors.thermal,
+          colors.thermal,
+          colors.thermal,
+          colors.thermal
         ],
         borderColor: [
-          colors.cooledBorder,
-          colors.cooledBorder,
-          colors.cooledBorder,
-          colors.cooledBorder,
-          colors.cooledBorder
+          colors.thermalBorder,
+          colors.thermalBorder,
+          colors.thermalBorder,
+          colors.thermalBorder,
+          colors.thermalBorder
         ],
         borderWidth: 3
       }
@@ -73,4 +71,4 @@ const complianceChartCooledData = {
   }
 };
 
-export default complianceChartCooledData;
+export default thermalComplianceChart;

@@ -5,7 +5,7 @@
       track-by="order_number"
       :api-mode="false"
       :fields="columns"
-      :data="pendingOrders"
+      :data="approvedOrders"
       @vuetable:row-clicked="processRowClick($event)"
       detail-row-component="pending-detail-row"
     >
@@ -59,8 +59,8 @@ export default {
     };
   },
   computed: {
-    pendingOrders() {
-      return this.Orders.filter(x => x.state === 0);
+    approvedOrders() {
+      return this.Orders.filter(x => x.state === 1);
     }
   },
   methods: {

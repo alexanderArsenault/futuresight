@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import modumVuetable from "../components/modumVuetable";
+import modumVuetable from "../components/vuetable/modumVuetable";
 import Options from "../data/order_items.json";
 import { store } from "../dataStore.js";
 export default {

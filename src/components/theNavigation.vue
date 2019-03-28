@@ -1,38 +1,49 @@
 <template>
-  <nav>
-    <div class="wrapper nav-bar">
-      <router-link to="/">
-        <div id="nav-logo"></div>
-      </router-link>
-      <div class="nav-list"></div>
-      <div class="nav-user"></div>
+  <div class="navigation-container">
+    <div class="navigation-bar">
+      <router-link to="/pending"> Pending </router-link>
+      <router-link to="/approved"> Approved </router-link>
+      <router-link to="/received"> Data Received </router-link>
     </div>
-  </nav>
+  </div>
+  <!-- <router-link></router-link> -->
 </template>
+<script>
+export default {
+  name: "navigation"
+};
+</script>
 <style lang="scss">
-@import "../styles/variables.scss";
+@import "../styles/_variables.scss";
 
-.wrapper {
-  max-width: 1400px;
-  margin: 0 auto;
+.navigation-container {
+  display: flex;
   width: 100%;
-  padding: 0 40px;
-  box-sizing: border-box;
-}
-
-nav {
-  background-color: $modum;
-}
-
-#nav-logo {
-  background-image: url("../assets/images/logo.svg");
-  background-position: center center;
-  background-repeat: no-repeat;
-  padding: 40px 0;
-  height: 20px;
-  width: 150px;
-  &:hover {
-    background-color: $modumdark;
+  a {
+    padding: 5px 20px;
+    border: 1px solid $offWhite;
+    margin-right: -1px;
+    text-align: center;
+    min-width: 200px;
+    display: inline-block;
+    font-size: 14px;
+    text-decoration: none;
+    color: $modumdark;
+    &.router-link-exact-active {
+      font-weight: 600;
+    }
+    &:first-of-type {
+      border-top-left-radius: 15px;
+      border-bottom-left-radius: 15px;
+    }
+    &:last-of-type {
+      border-top-right-radius: 15px;
+      border-bottom-right-radius: 15px;
+    }
   }
+}
+
+.navigation-bar {
+  margin: 0 auto;
 }
 </style>

@@ -48,6 +48,7 @@
 <script>
 import shippingChoice from "../components/shippingChoice";
 export default {
+  name: "about",
   components: {
     shippingChoice
   },

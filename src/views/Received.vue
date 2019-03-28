@@ -5,9 +5,9 @@
       track-by="order_number"
       :api-mode="false"
       :fields="columns"
-      :data="pendingOrders"
+      :data="receivedOrders"
       @vuetable:row-clicked="processRowClick($event)"
-      detail-row-component="pending-detail-row"
+      detail-row-component="received-detail-row"
     >
     </vuetable>
   </div>
@@ -17,12 +17,12 @@ import Vue from "vue";
 import vuetable from "vuetable-2/src/components/Vuetable";
 import Orders from "../data/orders.json";
 import { TableFilters } from "../mixins/TableFiters";
-import PendingDetailRow from "../components/vuetable/PendingDetailRow";
+import ReceivedDetailRow from "../components/vuetable/ReceivedDetailRow";
 
-Vue.component("pending-detail-row", PendingDetailRow);
+Vue.component("received-detail-row", ReceivedDetailRow);
 
 export default {
-  name: "pendingOrders",
+  name: "receivedOrders",
   components: {
     vuetable
   },
@@ -59,8 +59,8 @@ export default {
     };
   },
   computed: {
-    pendingOrders() {
-      return this.Orders.filter(x => x.state === 0);
+    receivedOrders() {
+      return this.Orders.filter(x => x.state === 2);
     }
   },
   methods: {

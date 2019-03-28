@@ -1,9 +1,8 @@
-import { store } from "../dataStore.js";
 import { colors } from "../styles/graph-variables";
 
-console.log(store);
-const complianceChartData = {
+const guaranteedCompliance = {
   type: "bar",
+  title: "Cooled",
   data: {
     labels: [],
     datasets: [
@@ -25,6 +24,7 @@ const complianceChartData = {
           colors.notCompliantBorder,
           colors.notCompliantBorder
         ],
+
         borderWidth: 3
       },
       {
@@ -32,18 +32,18 @@ const complianceChartData = {
         label: "Compliant",
         data: [],
         backgroundColor: [
-          colors.standard,
-          colors.standard,
-          colors.standard,
-          colors.standard,
-          colors.standard
+          colors.guaranteed,
+          colors.guaranteed,
+          colors.guaranteed,
+          colors.guaranteed,
+          colors.guaranteed
         ],
         borderColor: [
-          colors.standardBorder,
-          colors.standardBorder,
-          colors.standardBorder,
-          colors.standardBorder,
-          colors.standardBorder
+          colors.guaranteedBorder,
+          colors.guaranteedBorder,
+          colors.guaranteedBorder,
+          colors.guaranteedBorder,
+          colors.guaranteedBorder
         ],
         borderWidth: 3
       }
@@ -71,4 +71,4 @@ const complianceChartData = {
   }
 };
 
-export default complianceChartData;
+export default guaranteedCompliance;
