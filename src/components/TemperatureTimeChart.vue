@@ -26,7 +26,8 @@ export default {
       options: {
         lineTension: 10,
         scaleShowGridLines: false,
-        responsive: false,
+        maintainAspectRatio: false,
+        responsive: true,
         //String - Colour of the grid lines
         scaleGridLineColor: "rgba(0,0,0,.05)",
         //Number - Width of the grid lines
@@ -36,7 +37,11 @@ export default {
           yAxes: [
             {
               ticks: {
-                // beginAtZero: true
+                beginAtZero: true
+              },
+              scaleLabel: {
+                display: true,
+                labelString: "Temperature"
               }
             }
           ],
@@ -45,7 +50,11 @@ export default {
               type: "time",
               distribuiton: "series",
               ticks: {
-                source: "auto"
+                // source: "auto"
+              },
+              scaleLabel: {
+                display: true,
+                labelString: "Elapsed Time"
               }
             }
           ]
