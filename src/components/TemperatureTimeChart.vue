@@ -1,4 +1,5 @@
 <script>
+import moment from "moment";
 import { Line, mixins } from "vue-chartjs";
 const { reactiveProp } = mixins;
 
@@ -50,9 +51,14 @@ export default {
             {
               type: "time",
               distribuiton: "series",
+              time: {
+                displayFormats: {
+                  hour: "MMM DD: HA"
+                }
+              },
               ticks: {
-                // padding: 10
-                // source: "auto"
+                beginAtZero: true,
+                source: "auto"
               },
               scaleLabel: {
                 display: true,

@@ -14,17 +14,13 @@
           <div class="items-list items-list-compliant">
             <h4>Compliant Items</h4>
             <div class="items-scroll-container">
-              <span v-for="(item, index) in CompliantItems" :key="index">
-                {{ item.name }}
-              </span>
+              <span v-for="(item, index) in CompliantItems" :key="index">{{ item.name }}</span>
             </div>
           </div>
           <div class="items-list items-list-not-compliant">
             <h4>Not Compliant Items</h4>
             <div class="items-scroll-container">
-              <span v-for="(item, index) in notCompliantItems" :key="index">
-                {{ item.name }}
-              </span>
+              <span v-for="(item, index) in notCompliantItems" :key="index">{{ item.name }}</span>
             </div>
           </div>
         </div>
@@ -42,20 +38,30 @@
                 <td>Compliant Items:</td>
                 <td>
                   {{
-                    this.SuggestedOrder.compliant +
-                      " / " +
-                      this.SuggestedOrder.compliant
+                  this.SuggestedOrder.compliant +
+                  " / " +
+                  (this.SuggestedOrder['non-compliant'] + this.SuggestedOrder.compliant)
                   }}
                 </td>
-                <td>7/8</td>
+                <td>
+                  {{
+                  this.CompliantItems.length +
+                  " / " +
+                  (this.CompliantItems.length + this.notCompliantItems.length)
+                  }}
+                </td>
               </tr>
               <tr>
-                <td>Value of Not Compliant Items:</td>
-                <td>67.8 CHF</td>
+                <td>Value Lost:</td>
+                <td>{{pricify(SuggestedOrder.risk) }}</td>
                 <td>24.2 CHF</td>
               </tr>
             </tbody>
           </table>
+          <div class="received-button-container">
+            <div class="package-risk-button">Alert Receiver</div>
+            <div class="package-risk-button">Resend Items</div>
+          </div>
         </div>
       </div>
     </div>
@@ -65,7 +71,6 @@
 import { TableFilters } from "../../mixins/TableFiters";
 import TemperatureData from "../../data/order_temperature_data.json";
 import TemperatureTimeChart from "../../components/TemperatureTimeChart.vue";
-// import OrderItems from "../../data/ordered_items.json";
 
 export default {
   name: "received-detail-row",
@@ -108,10 +113,6 @@ export default {
             label: "Temperature",
             backgroundColor: "transparent",
             borderColor: "rgba(200,150,50,.5)",
-            // pointColor: "rgba(1,1,1,1)",
-            // pointStrokeColor: "rgba(1, 1, 1, 1))",
-            // pointHighlightFill: "#fff",
-            // pointHighlightStroke: "rgba(220,220,220,1)",
             data: []
           }
         ]
@@ -196,6 +197,9 @@ export default {
   border-radius: 5px;
   padding: 20px;
   width: 60%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
   table {
     border: none;
     th {
@@ -209,6 +213,12 @@ export default {
     td {
       border: none;
       padding: 5px;
+    }
+  }
+  .package-risk-button {
+    padding: 10px 20px;
+    &:first-of-type {
+      margin-bottom: 10px;
     }
   }
 }

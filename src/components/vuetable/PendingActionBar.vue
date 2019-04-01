@@ -2,16 +2,16 @@
   <th v-if="isHeader"></th>
   <td v-else>
     <font-awesome-icon
-      class="icon icons-grid-check"
-      :icon="['fa', 'check']"
-      title="Accept Suggestion"
-      @click="acceptSuggestion()"
-    />
-    <font-awesome-icon
       class="icon icons-grid-cog"
       :icon="['fa', 'search']"
       title="View Details"
       @click="viewOrderDetails()"
+    />
+    <font-awesome-icon
+      class="icon icons-grid-check"
+      :icon="['fa', 'check']"
+      title="Accept Suggestion"
+      @click="acceptSuggestion()"
     />
   </td>
 </template>
@@ -44,8 +44,8 @@ export default {
 p {
   margin: 0;
 }
-.icons-grid-check {
-  margin-right: 10px;
+.icons-grid-cog {
+  margin-right: 20px;
 }
 .icon {
   cursor: pointer;

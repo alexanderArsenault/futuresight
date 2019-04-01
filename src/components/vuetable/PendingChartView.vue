@@ -164,7 +164,7 @@ export default {
   }
 }
 .chart-display-half {
-  height: 300px;
+  height: 275px;
 }
 .pending-charts {
   display: flex;

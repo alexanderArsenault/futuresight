@@ -1,6 +1,23 @@
 <template>
   <div class="detail-row">
-    <div class="approved-selection-cover"></div>
+    <div class="approved-selection-cover" v-if="modaldisplay">
+      <div class="approved-selection-popup" v-if="selected_option">
+        <div class="approved-popup-information">
+          <h4>Selected Option</h4>
+          <span>Shipping Date: {{ epochToName(selected_option.dates)}}</span>
+          <span>Total Value: {{ pricify(rowData.total_amount) }}</span>
+          <span>
+            Complaint Items: {{ selected_option.ok }} /
+            {{ selected_option.ok + selected_option.not_ok }}
+          </span>
+          <span>Non Compliant Value: {{ pricify(selected_option.loss) }}</span>
+          <span>Prediction Confidence: 99%</span>
+          <span>Packaging Cost: {{ packageCost }}</span>
+          <span>Total Risk: {{ pricify(selected_option.risk) }}</span>
+        </div>
+        <div @click="modaldisplay = false" class="package-risk-button">Edit Shipment</div>
+      </div>
+    </div>
     <transition>
       <PendingChartView
         v-if="!showdatepicker"
@@ -16,9 +33,7 @@
               class="package-date-dates"
               v-for="(date, index) in StandardRisk"
               :key="'label' + index"
-            >
-              {{ epochToName(date.dates) }}
-            </div>
+            >{{ epochToName(date.dates) }}</div>
           </div>
           <!-- Left -->
           <div class="left">
@@ -45,20 +60,15 @@
                 title="View Data"
                 @click="showdatepicker = false"
               />
-              <font-awesome-icon
-                :icon="['fa', 'info-circle']"
-                title="Calculations"
-              />
+              <font-awesome-icon :icon="['fa', 'info-circle']" title="Calculations"/>
             </div>
             <div class="right-information">
               <span>Total Value: {{ pricify(rowData.total_amount) }}</span>
-              <span
-                >Complaint Items: {{ selected_option.ok }} /
+              <span>
+                Complaint Items: {{ selected_option.ok }} /
                 {{ selected_option.ok + selected_option.not_ok }}
               </span>
-              <span
-                >Non Compliant Value: {{ pricify(selected_option.loss) }}
-              </span>
+              <span>Non Compliant Value: {{ pricify(selected_option.loss) }}</span>
               <span>Prediction Confidence: 99%</span>
               <span>Packaging Cost: {{ packageCost }}</span>
               <span>Total Risk: {{ pricify(selected_option.risk) }}</span>
@@ -68,22 +78,13 @@
           <div class="buttons">
             <div
               class="package-risk-button"
-              @click="$parent.$emit('accept', rowData)"
-            >
-              Approve Shipment
-            </div>
+              @click="$parent.$emit('accept', rowData); modaldisplay = true"
+            >Approve Shipment</div>
             <div
               class="package-risk-button"
               @click="setActive(rowData.suggestion)"
-            >
-              Reset to Suggestion
-            </div>
-            <div
-              class="package-risk-button"
-              @click="$parent.$emit('close', rowData)"
-            >
-              Close Selector
-            </div>
+            >Reset to Suggestion</div>
+            <div class="package-risk-button" @click="$parent.$emit('close', rowData)">Close Selector</div>
           </div>
         </div>
       </div>
@@ -99,7 +100,7 @@ import TableCell from "./TableCell";
 import PackagingLabel from "./PackagingLabel";
 
 export default {
-  name: "pending-detail-row",
+  name: "approved-detail-row",
   mixins: [TableFilters],
   components: {
     PendingChartView,
@@ -117,13 +118,26 @@ export default {
   },
   data() {
     return {
+      modaldisplay: true,
       showdatepicker: true,
       active_order: this.rowData.order_number,
       selected_option: null
     };
   },
   created() {
-    this.selected_option = this.rowData.suggestion;
+    if (this.rowData.suggestion.kind === "thermo-cool-ultra") {
+      let order = this.GuaranteedRisk.filter(x => {
+        return x.dates === this.rowData.suggestion.dates;
+      });
+      this.setActive(...order);
+      return;
+    }
+    if (this.rowData.selected_order === undefined) {
+      let order = this.suggestionToRiskData(this.rowData);
+      this.setActive(...order);
+    } else {
+      this.setActive(this.rowData.selected_order);
+    }
   },
   methods: {
     setActive(shippingOption) {
@@ -168,6 +182,8 @@ export default {
         x.kind = "thermo-cool-ultra";
         x.risk = 25.0;
         x.loss = 0.0;
+        x.ok = x.ok + x.not_ok;
+        x.not_ok = 0;
         return x;
       });
     },
@@ -254,6 +270,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #fff;
   cursor: pointer;
 }
 
@@ -292,6 +309,33 @@ export default {
   height: 100%;
   top: 0;
   left: 0;
-  background-color: rgba(100, 100, 100, 0.1);
+  background-color: rgba(50, 50, 50, 0.7);
+}
+
+.approved-selection-popup {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  .package-risk-button {
+    padding: 10px;
+  }
+}
+
+.approved-popup-information {
+  width: auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  span {
+    display: block;
+    padding-bottom: 5px;
+  }
+  h4 {
+    margin-top: 0;
+  }
 }
 </style>

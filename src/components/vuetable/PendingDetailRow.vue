@@ -15,9 +15,7 @@
               class="package-date-dates"
               v-for="(date, index) in StandardRisk"
               :key="'label' + index"
-            >
-              {{ epochToName(date.dates) }}
-            </div>
+            >{{ epochToName(date.dates) }}</div>
           </div>
           <!-- Left -->
           <div class="left">
@@ -44,20 +42,15 @@
                 title="View Data"
                 @click="showdatepicker = false"
               />
-              <font-awesome-icon
-                :icon="['fa', 'info-circle']"
-                title="Calculations"
-              />
+              <font-awesome-icon :icon="['fa', 'info-circle']" title="Calculations"/>
             </div>
             <div class="right-information">
               <span>Total Value: {{ pricify(rowData.total_amount) }}</span>
-              <span
-                >Complaint Items: {{ selected_option.ok }} /
+              <span>
+                Complaint Items: {{ selected_option.ok }} /
                 {{ selected_option.ok + selected_option.not_ok }}
               </span>
-              <span
-                >Non Compliant Value: {{ pricify(selected_option.loss) }}
-              </span>
+              <span>Non Compliant Value: {{ pricify(selected_option.loss) }}</span>
               <span>Prediction Confidence: 99%</span>
               <span>Packaging Cost: {{ packageCost }}</span>
               <span>Total Risk: {{ pricify(selected_option.risk) }}</span>
@@ -67,22 +60,13 @@
           <div class="buttons">
             <div
               class="package-risk-button"
-              @click="$parent.$emit('accept', rowData)"
-            >
-              Approve Shipment
-            </div>
+              @click="$parent.$emit('accept', selected_option)"
+            >Approve Shipment</div>
             <div
               class="package-risk-button"
               @click="setActive(rowData.suggestion)"
-            >
-              Reset to Suggestion
-            </div>
-            <div
-              class="package-risk-button"
-              @click="$parent.$emit('close', rowData)"
-            >
-              Close Selector
-            </div>
+            >Reset to Suggestion</div>
+            <div class="package-risk-button" @click="$parent.$emit('close', rowData)">Close Selector</div>
           </div>
         </div>
       </div>
@@ -93,7 +77,6 @@
 import RiskData from "../../data/total_exposure_per_order.json";
 import { TableFilters } from "../../mixins/TableFiters";
 import PendingChartView from "./PendingChartView";
-// import ComplianceData from "../../data/compliant_items_per_order.json";
 import TableCell from "./TableCell";
 import PackagingLabel from "./PackagingLabel";
 
@@ -125,8 +108,8 @@ export default {
     this.selected_option = this.rowData.suggestion;
   },
   methods: {
-    setActive(shippingOption) {
-      this.selected_option = shippingOption;
+    setActive(shippingoption) {
+      this.selected_option = shippingoption;
     },
     findActiveOrder(renderedOrder) {
       if (
@@ -165,6 +148,8 @@ export default {
       array = JSON.parse(JSON.stringify(array));
       return array.map(x => {
         x.kind = "thermo-cool-ultra";
+        x.ok = x.ok + x.not_ok;
+        x.not_ok = 0;
         x.risk = 25.0;
         x.loss = 0.0;
         return x;

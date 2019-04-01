@@ -9,9 +9,8 @@
       @vuetable:field-event="processIconClick($event)"
       :detail-row-component="detailRow"
       @close="toggleDetailRow($event.order_number)"
-      @accept="updateState($event.order_number)"
-    >
-    </vuetable>
+      @accept="updateState($event)"
+    ></vuetable>
   </div>
 </template>
 <script>
@@ -80,7 +79,8 @@ export default {
       if (event.type === "details") {
         this.toggleDetailRow(event.data.order_number);
       } else if (event.type === "accept") {
-        this.updateState(event.data.order_number);
+        this.toggleDetailRow(event.data.order_number);
+        this.updateState(event.data);
       }
     },
     toggleDetailRow(ordernumber) {
@@ -98,12 +98,14 @@ export default {
         this.active_row = ordernumber;
       }
     },
-    updateState(ordernumber) {
+    updateState(selectedorder) {
+      console.log(selectedorder);
       for (var i = 0; i < this.Orders.length; i++) {
-        if (this.Orders[i].order_number === ordernumber) {
-          this.Orders[i].state = 1;
+        if (this.Orders[i].order_number === selectedorder.order_number) {
+          this.Orders[i].selected_order = selectedorder;
         }
       }
+      this.toggleDetailRow(selectedorder.order_number);
     }
   }
 };
