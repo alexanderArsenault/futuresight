@@ -37,6 +37,7 @@ export default {
           yAxes: [
             {
               ticks: {
+                padding: 10,
                 beginAtZero: true
               },
               scaleLabel: {
@@ -50,6 +51,7 @@ export default {
               type: "time",
               distribuiton: "series",
               ticks: {
+                // padding: 10
                 // source: "auto"
               },
               scaleLabel: {

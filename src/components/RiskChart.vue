@@ -28,15 +28,30 @@ export default {
   data() {
     return {
       options: {
-        responsive: false,
-        height: 500,
+        responsive: true,
+        maintainAspectRatio: false,
         lineTension: 1,
         scales: {
           yAxes: [
             {
+              scaleLabel: {
+                display: true,
+                labelString: "Predicted Risk (CHF)"
+              },
               ticks: {
                 beginAtZero: true,
-                padding: 25
+                padding: 10
+              }
+            }
+          ],
+          xAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Shipment Date"
+              },
+              ticks: {
+                beginAtZero: true
               }
             }
           ]

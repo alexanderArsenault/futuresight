@@ -1,22 +1,31 @@
 <template>
-  <div class="shipping-picker-container">
+  <div class="pending-charts">
     <div id="risk-chart-container">
-      <RiskChart
-        v-if="ChartDataTransformer"
-        :chartData="RiskDataTransformer"
-        :height="300"
-        :width="600"
-      ></RiskChart>
-      <ComplianceChart
-        v-if="ChartDataTransformer"
-        :height="250"
-      ></ComplianceChart>
+      <div class="risk-chart">
+        <h4>Predicted Risk per Packaging per Date</h4>
+        <RiskChart
+          v-if="RiskDataTransformer"
+          :chartData="RiskDataTransformer"
+          class="chart-display-half"
+        ></RiskChart>
+      </div>
+      <div class="risk-chart">
+        <h4>Predicted Compliant Items per Packaging per Date</h4>
+        <ComplianceChart
+          v-if="ComplianceDataTransformer"
+          :chartData="ComplianceDataTransformer"
+          class="chart-display-half"
+        ></ComplianceChart>
+      </div>
     </div>
-    <font-awesome-icon
-      :icon="['fa', 'chart-bar']"
-      title="View Data"
-      @click="$emit('hidecharts')"
-    />
+    <div id="icons-container">
+      <font-awesome-icon
+        class="icons-grid-icon"
+        :icon="['fa', 'th']"
+        title="View Data"
+        @click="$emit('hidecharts')"
+      />
+    </div>
   </div>
 </template>
 <script>
@@ -24,34 +33,24 @@ import ComplianceChart from "../../components/ComplianceChart.vue";
 import RiskChart from "../../components/RiskChart.vue";
 import { colors } from "../../styles/graph-variables.js";
 import RiskData from "../../data/total_exposure_per_order.json";
-import ComplianceData from "../../data/compliant_items_per_order.json";
-// import ItemsTable from "../../components/vuetable/ItemsTable.vue";
+import ComplianceData from "../../data/number_of_compliant_items_per_order.json";
 import { TableFilters } from "../../mixins/TableFiters";
 
 export default {
-  name: "pending-detail-row",
+  name: "pending-chart-view",
   mixins: [TableFilters],
   components: {
     ComplianceChart,
-    // ItemsTable,
     RiskChart
   },
   props: {
-    active_order: {
-      type: Number,
-      required: true
-    },
     selected_option: {
       type: Object
-    },
-    rowIndex: {
-      type: Number
     }
   },
   data() {
     return {
-      selected_date: "",
-      currentCompliancyData: []
+      active_order: this.selected_option.order_number
     };
   },
   computed: {
@@ -74,49 +73,6 @@ export default {
         return x;
       });
     },
-    ColorSwitcher() {
-      let colorsObj = {};
-      switch (this.packing_type) {
-        case "standard":
-          return {
-            backgroundColor: colors.standard,
-            borderColor: colors.standardBorder
-          };
-        case "thermo-o-cool":
-          return {
-            backgroundColor: colors.thermal,
-            borderColor: colors.thermalBorder
-          };
-        case "thermo-cool-ultra":
-          return {
-            backgroundColor: colors.guaranteed,
-            borderColor: colors.guaranteedBorder
-          };
-      }
-      return colorsObj;
-    },
-    ChartDataTransformer() {
-      let datacollection = {
-        labels: [],
-        datasets: [
-          {
-            ...this.ColorSwitcher,
-            label: "Compliant",
-            data: []
-          },
-          {
-            label: "Not Compliant",
-            data: []
-          }
-        ]
-      };
-      // this.FilteredCompliancyData.forEach(x => {
-      //   datacollection.labels.push(x.dates);
-      //   datacollection.datasets[0].data.push(x.compliant);
-      //   datacollection.datasets[1].data.push(x.not_compliant);
-      // });
-      return datacollection;
-    },
     RiskArray() {
       return RiskData.filter(x => x.order_number === this.active_order);
     },
@@ -125,6 +81,39 @@ export default {
     },
     ThermalRisk() {
       return this.RiskArray.filter(x => x.kind === "thermo-o-cool");
+    },
+    ComplianceDataTransformer() {
+      let datacollection = {
+        labels: [],
+        datasets: [
+          {
+            backgroundColor: colors.standard,
+            label: "Standard",
+            data: []
+          },
+          {
+            backgroundColor: colors.thermal,
+            label: "Thermal",
+            data: []
+          },
+          {
+            label: "Termal Guaranteed",
+            backgroundColor: colors.guaranteed,
+            data: []
+          }
+        ]
+      };
+      this.StandardCompliance.forEach(x => {
+        datacollection.labels.push(this.epochToName(x.dates));
+        datacollection.datasets[0].data.push(x.compliant);
+      });
+      this.ThermalCompliance.forEach(x => {
+        datacollection.datasets[1].data.push(x.compliant);
+      });
+      this.GuaranteedCompliance.forEach(x => {
+        datacollection.datasets[2].data.push(x.compliant);
+      });
+      return datacollection;
     },
     RiskDataTransformer() {
       let datacollection = {
@@ -141,7 +130,7 @@ export default {
             data: []
           },
           {
-            label: "Termal+plus Guaranteed",
+            label: "Termal Guaranteed",
             backgroundColor: colors.guaranteed,
             data: [25, 25, 25, 25, 25]
           }
@@ -163,80 +152,29 @@ export default {
 <style lang="scss">
 @import "../../styles/_variables.scss";
 
-.shipping-picker-container {
-  display: flex;
-  width: 100%;
-  margin: 20px 0 30px;
-  .shipping-choice {
-    padding: 5px 20px;
-    border: 1px solid $offWhite;
-    cursor: pointer;
-    margin-right: -1px;
-    text-align: center;
-    min-width: 200px;
-    display: inline-block;
-    font-size: 14px;
-    text-decoration: none;
-    color: $modumdark;
-    &.router-link-exact-active {
-      font-weight: 600;
-    }
-    &:first-of-type {
-      border-top-left-radius: 15px;
-      border-bottom-left-radius: 15px;
-    }
-    &:last-of-type {
-      border-top-right-radius: 15px;
-      border-bottom-right-radius: 15px;
-    }
-  }
-}
-
-.picking-bar {
-  margin: 0 auto;
-}
-
-.active {
-  font-weight: bold;
-  color: white !important;
-  box-sizing: border-box;
-}
-#standard.active {
-  background-color: $standard;
-  // border: 3px solid $standardBorder;
-  border: 1px solid $standard;
-}
-#thermal.active {
-  background-color: $thermal;
-  // border: 3px solid $thermalBorder;
-  border: 1px solid $thermal;
-}
-#guaranteed.active {
-  background-color: $guaranteed;
-  // border: 3px solid $guaranteedBorder;
-  border: 1px solid $guaranteed;
-}
-
-.detail-row-body {
+#risk-chart-container {
+  width: calc(100% - 40px);
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
-  width: 100%;
 }
-.detail-row-left {
-  width: 100%;
+.risk-chart {
+  width: calc(50% - 20px);
+  h4 {
+    text-align: center;
+  }
+}
+.chart-display-half {
+  height: 300px;
+}
+.pending-charts {
   display: flex;
-  margin-bottom: 30px;
 }
-.detail-row-right {
-  width: 100%;
-}
-#risk-chart-container {
+#icons-container {
+  width: 40px;
   display: flex;
+  justify-content: center;
 }
-.selection-info-container {
-  border: 1px solid whitesmoke;
-  width: 100%;
-  padding: 20px;
+.icons-grid-icon {
+  cursor: pointer;
 }
 </style>

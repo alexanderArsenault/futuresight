@@ -1,5 +1,6 @@
 <template>
   <div class="detail-row">
+    <div class="approved-selection-cover"></div>
     <transition>
       <PendingChartView
         v-if="!showdatepicker"
@@ -181,7 +182,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../styles/_variables.scss";
 
 .package-risk-matrix {
@@ -261,6 +262,7 @@ export default {
 }
 
 .detail-row {
+  position: relative;
   h3 {
     text-align: center;
     margin-bottom: 30px;
@@ -282,5 +284,14 @@ export default {
 }
 .slide-leave-to {
   transform: translate(-100%, 0);
+}
+
+.approved-selection-cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(100, 100, 100, 0.1);
 }
 </style>

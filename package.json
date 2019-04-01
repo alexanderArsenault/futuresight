@@ -18,7 +18,8 @@
     "vue-chart.js": "^0.2.0",
     "vue-chartjs": "^3.4.2",
     "vue-router": "^3.0.1",
-    "vue-stepper": "^1.4.2"
+    "vue-stepper": "^1.4.2",
+    "vuetable-2": "^2.0.0-beta.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",
@@ -30,7 +31,6 @@
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
-    "vue-template-compiler": "^2.5.21",
-    "vuetable-2": "^1.7.5"
+    "vue-template-compiler": "^2.5.21"
   }
 }

@@ -6,31 +6,31 @@
       :api-mode="false"
       :fields="columns"
       :data="pendingOrders"
-      @vuetable:row-clicked="processRowClick($event)"
-      detail-row-component="pending-detail-row"
+      @vuetable:field-event="processIconClick($event)"
+      :detail-row-component="detailRow"
+      @close="toggleDetailRow($event.order_number)"
+      @accept="updateState($event.order_number)"
     >
     </vuetable>
   </div>
 </template>
 <script>
-import Vue from "vue";
+import moment from "moment";
 import vuetable from "vuetable-2/src/components/Vuetable";
 import Orders from "../data/orders.json";
-import { TableFilters } from "../mixins/TableFiters";
+import PendingActionBar from "../components/vuetable/PendingActionBar.vue";
 import PendingDetailRow from "../components/vuetable/PendingDetailRow";
-
-Vue.component("pending-detail-row", PendingDetailRow);
 
 export default {
   name: "pendingOrders",
   components: {
     vuetable
   },
-  mixins: [TableFilters],
   data() {
     return {
       active_row: null,
       Orders,
+      detailRow: PendingDetailRow,
       columns: [
         {
           name: "order_number",
@@ -43,17 +43,34 @@ export default {
         {
           name: "deliver_until",
           title: "Ship By Date",
-          callback: this.epochToDate
+          formatter(value) {
+            return moment(value).format("DD-MM-YYYY");
+          }
         },
         {
           name: "suggestion.dates",
           title: "Suggested Date",
-          callback: this.epochToDate
+          formatter(value) {
+            return moment(value).format("DD-MM-YYYY");
+          }
         },
         {
           name: "suggestion.kind",
           title: "Suggested Packaging",
-          callback: this.packageNameConverter
+          formatter(value) {
+            switch (value) {
+              case "thermo-o-cool":
+                return "Thermal Packaging";
+              case "standard":
+                return "Standard Packaging";
+              default:
+                return "Thermal Guaranteed";
+            }
+          }
+        },
+        {
+          name: PendingActionBar,
+          title: "action"
         }
       ]
     };
@@ -64,12 +81,34 @@ export default {
     }
   },
   methods: {
-    processRowClick(event) {
-      if (this.active_row !== null) {
-        this.$refs.vuetable.hideDetailRow(this.active_row);
+    processIconClick(event) {
+      if (event.type === "details") {
+        this.toggleDetailRow(event.data.order_number);
+      } else if (event.type === "accept") {
+        this.updateState(event.data.order_number);
       }
-      this.toggleDetailRow(event);
-      this.active_row = event;
+    },
+    toggleDetailRow(ordernumber) {
+      if (this.active_row === null) {
+        this.$refs.vuetable.showDetailRow(ordernumber);
+        this.active_row = ordernumber;
+        return;
+      }
+      if (this.$refs.vuetable.isVisibleDetailRow(ordernumber)) {
+        this.$refs.vuetable.hideDetailRow(ordernumber);
+        return;
+      } else {
+        this.$refs.vuetable.hideDetailRow(this.active_row);
+        this.$refs.vuetable.showDetailRow(ordernumber);
+        this.active_row = ordernumber;
+      }
+    },
+    updateState(ordernumber) {
+      for (var i = 0; i < this.Orders.length; i++) {
+        if (this.Orders[i].order_number === ordernumber) {
+          this.Orders[i].state = 1;
+        }
+      }
     }
   }
 };

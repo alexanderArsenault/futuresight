@@ -3,7 +3,7 @@ import { Bar, mixins } from "vue-chartjs";
 const { reactiveProp } = mixins;
 
 export default {
-  name: "compliance-chart",
+  name: "risk-chart",
   extends: Bar,
   mixins: [reactiveProp],
   props: {
@@ -16,7 +16,8 @@ export default {
       type: String
     },
     chartData: {
-      type: Object
+      type: Object,
+      default: null
     }
   },
   watch: {
@@ -26,36 +27,31 @@ export default {
   },
   data() {
     return {
-      chartdata1: {
-        labels: ["may1", "may2", "may3", "may4", "may4"],
-        datasets: [
-          {
-            label: "Compliant",
-            backgroundColor: "#000000",
-            data: [8, 8, 8, 8, 8]
-          },
-          {
-            label: "Not Compliant",
-            data: [8, 8, 8, 8, 8]
-          }
-        ]
-      },
       options: {
-        responsive: false,
-        lineTension: 1,
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
           yAxes: [
             {
-              stacked: true,
+              scaleLabel: {
+                display: true,
+                labelString: "Compliant Items"
+              },
               ticks: {
                 beginAtZero: true,
-                padding: 25
+                padding: 10
               }
             }
           ],
           xAxes: [
             {
-              stacked: true
+              scaleLabel: {
+                display: true,
+                labelString: "Shipment Date"
+              },
+              ticks: {
+                beginAtZero: true
+              }
             }
           ]
         }
@@ -63,7 +59,7 @@ export default {
     };
   },
   mounted() {
-    this.renderChart(this.chartdata1, this.options);
+    this.renderChart(this.chartData, this.options);
   }
 };
 </script>

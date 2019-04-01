@@ -2,6 +2,7 @@
   <div class="received-detail-row">
     <div class="detail-content-container">
       <div class="time-series-container">
+        <h4>Shipment Temperature</h4>
         <TemperatureTimeChart
           v-if="TemperatureChartDataTransformer"
           :chartData="TemperatureChartDataTransformer"
@@ -137,6 +138,9 @@ export default {
 }
 .time-series-container {
   width: 50%;
+  h4 {
+    text-align: center;
+  }
   .time-series-chart {
     height: 300px;
   }
